@@ -29,7 +29,11 @@ public class JsonSerializer implements Serializer {
 
                 Object[] objects = new Object[request.getParams().length];
                 // 把json字串转化成对应的对象， fastjson可以读出基本数据类型，不用转化
+                // 循环遍历参数数组，对于每个参数，检查其类型是否与预期匹配。
+                // 如果不匹配，则使用JSONObject.toJavaObject将JSON对象转换为适当的Java对象类型。
                 for(int i = 0; i < objects.length; i++){
+                    // 根据参数定义的类型 paramsType ，对请求参数 request.getParams()[i] 进行类型检查和转换
+                    // 不兼容，转换；兼容，直接使用；
                     Class<?> paramsType = request.getParamsTypes()[i];
                     if (!paramsType.isAssignableFrom(request.getParams()[i].getClass())){
                         objects[i] = JSONObject.toJavaObject((JSONObject) request.getParams()[i],request.getParamsTypes()[i]);

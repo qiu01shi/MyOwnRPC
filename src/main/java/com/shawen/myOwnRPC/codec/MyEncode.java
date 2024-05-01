@@ -15,6 +15,9 @@ import lombok.AllArgsConstructor;
 public class MyEncode extends MessageToByteEncoder {
     private Serializer serializer;
 
+    // ChannelHandlerContext ctx：Netty的通道处理上下文，提供了操作网络连接的方法。
+    // Object msg：要编码的消息对象。
+    // ByteBuf out：Netty的字节数据容器，用于写入编码后的字节数据。
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
         // 写入消息类型

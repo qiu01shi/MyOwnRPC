@@ -36,14 +36,15 @@ public class ServiceProvider {
 
     public void provideServiceInterface(Object service){
         Class<?>[] interfaces = service.getClass().getInterfaces();
-
+        // 本机的映射表；在服务需要时，可以快速查找到对应的服务实现；
         for(Class clazz : interfaces){
             // 本机的映射表
             interfaceProvider.put(clazz.getName(),service);
-            // 在注册中心注册服务
+            // 在注册中心注册服务；通过接口名和服务地址注册服务，
+            // 这里的地址由主机名 host 和端口号 port 组成的 InetSocketAddress 对象指定；
+            // 使得服务发现机制能够找到特定提供接口服务的服务器的网络地址。
             serviceRegister.register(clazz.getName(),new InetSocketAddress(host,port));
         }
-
     }
 
     public Object getService(String interfaceName){
