@@ -5,6 +5,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.shawen.myOwnRPC.common.RPCRequest;
 import com.shawen.myOwnRPC.common.RPCResponse;
+import com.shawen.myOwnRPC.common.exception.SerializeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ public class KryoSerializer implements Serializer{
             kryoThreadLocal.remove();
         } catch (IOException e) {
             logger.error("occur exception when serialize:", e);
-            e.printStackTrace();
+            throw new SerializeException("Serialization failed");
         }
         return bytes;
     }
@@ -69,7 +70,7 @@ public class KryoSerializer implements Serializer{
 
         }catch (Exception e) {
             logger.error("occur exception when deserialize:", e);
-            e.printStackTrace();
+            throw new SerializeException("Deserialization failed");
         }
         return obj;
     }

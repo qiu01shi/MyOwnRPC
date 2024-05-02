@@ -19,6 +19,10 @@ public interface Serializer {
                 return new JsonSerializer();
             case 2:
                 return new KryoSerializer();
+            case 3:
+                return new ProtostuffSerializer();
+            case 4:
+                return new HessianSerializer();
             default:
                 return null;
         }
