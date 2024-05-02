@@ -2,6 +2,10 @@ package com.shawen.myOwnRPC.client;
 
 import com.shawen.myOwnRPC.common.RPCRequest;
 import com.shawen.myOwnRPC.common.RPCResponse;
+import com.shawen.myOwnRPC.common.RpcConstants;
+import com.shawen.myOwnRPC.common.RpcMessage;
+import com.shawen.myOwnRPC.common.enums.CompressTypeEnum;
+import com.shawen.myOwnRPC.common.enums.SerializationTypeEnum;
 import com.shawen.myOwnRPC.register.ServiceRegister;
 import com.shawen.myOwnRPC.register.ZkServiceRegister;
 import io.netty.bootstrap.Bootstrap;
@@ -45,8 +49,15 @@ public class NettyRPCClient implements RPCClient {
         try {
             ChannelFuture channelFuture  = bootstrap.connect(host, port).sync();
             Channel channel = channelFuture.channel();
+            // 构建 RpcMessage 消息结构
+            RpcMessage rpcMessage = RpcMessage.builder().data(request)
+                    .codec(SerializationTypeEnum.KYRO.getCode())
+                    .compress(CompressTypeEnum.GZIP.getCode())
+                    .messageType(RpcConstants.REQUEST_TYPE)
+                    .build();
+
             // 发送数据
-            channel.writeAndFlush(request);
+            channel.writeAndFlush(rpcMessage);
             channel.closeFuture().sync();
             // 阻塞地获得结果，通过给 channel 设计别名，获取特定名字下的 channel 中的内容（这个在 hanlder 中设置）
             // AttributeKey是，线程隔离的，不会由线程安全问题。

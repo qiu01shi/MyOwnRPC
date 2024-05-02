@@ -1,4 +1,4 @@
-package com.shawen.myOwnRPC.codec;
+package com.shawen.myOwnRPC.codec.serializer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

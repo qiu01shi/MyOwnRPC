@@ -1,4 +1,4 @@
-package com.shawen.myOwnRPC.codec;
+package com.shawen.myOwnRPC.codec.serializer;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
@@ -7,7 +7,7 @@ import com.shawen.myOwnRPC.common.exception.SerializeException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-public class HessianSerializer implements Serializer{
+public class HessianSerializer implements Serializer {
     @Override
     public byte[] serialize(Object obj) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {

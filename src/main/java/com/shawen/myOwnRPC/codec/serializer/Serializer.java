@@ -1,4 +1,4 @@
-package com.shawen.myOwnRPC.codec;
+package com.shawen.myOwnRPC.codec.serializer;
 
 
 public interface Serializer {

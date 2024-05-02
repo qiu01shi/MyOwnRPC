@@ -1,4 +1,4 @@
-package com.shawen.myOwnRPC.codec;
+package com.shawen.myOwnRPC.codec.serializer;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -13,7 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class KryoSerializer implements Serializer{
+public class KryoSerializer implements Serializer {
 
     private static final Logger logger = LoggerFactory.getLogger(KryoSerializer.class);
 

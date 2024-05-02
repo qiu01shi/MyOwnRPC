@@ -1,4 +1,4 @@
-package com.shawen.myOwnRPC.codec;
+package com.shawen.myOwnRPC.codec.serializer;
 
 import com.shawen.myOwnRPC.common.RPCRequest;
 import com.shawen.myOwnRPC.common.RPCResponse;

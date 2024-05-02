@@ -2,9 +2,14 @@ package com.shawen.myOwnRPC.server;
 
 import com.shawen.myOwnRPC.common.RPCRequest;
 import com.shawen.myOwnRPC.common.RPCResponse;
+import com.shawen.myOwnRPC.common.RpcConstants;
+import com.shawen.myOwnRPC.common.RpcMessage;
+import com.shawen.myOwnRPC.common.enums.CompressTypeEnum;
+import com.shawen.myOwnRPC.common.enums.SerializationTypeEnum;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,17 +18,31 @@ import java.lang.reflect.Method;
  * 因为是服务器端，我们知道接受到请求格式是RPCRequest
  * Object类型也行，强制转型就行
  */
+@Slf4j
 @AllArgsConstructor
-public class NettyRPCServerHandler extends SimpleChannelInboundHandler<RPCRequest> {
+public class NettyRPCServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
     private ServiceProvider serviceProvider;
 
     // 是 SimpleChannelInboundHandler 的核心方法，用于处理接收到的每个 RPCRequest 消息。
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RPCRequest msg) throws Exception {
-        //System.out.println(msg);
-        RPCResponse response = getResponse(msg);
-        ctx.writeAndFlush(response);
-        ctx.close();
+    protected void channelRead0(ChannelHandlerContext ctx, RpcMessage msg) throws Exception {
+            log.info("server receive msg: [{}] ", msg);
+            byte messageType = msg.getMessageType();
+            RpcMessage rpcMessage = new RpcMessage();
+            rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+            rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
+            if (messageType == RpcConstants.HEARTBEAT_REQUEST_TYPE) {
+                rpcMessage.setMessageType(RpcConstants.HEARTBEAT_RESPONSE_TYPE);
+                rpcMessage.setData(RpcConstants.PONG);
+            } else {
+                RPCRequest rpcRequest = (RPCRequest) msg.getData();
+                RPCResponse response = getResponse(rpcRequest);
+                log.info(String.format("server get result: %s", response.toString()));
+                rpcMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
+                rpcMessage.setData(response);
+            }
+            ctx.writeAndFlush(rpcMessage);
+            ctx.close();
     }
 
     // 这个方法在处理过程中发生异常时被调用。
