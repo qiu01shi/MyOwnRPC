@@ -1,0 +1,5 @@
+object=com.shawen.serialize.ObjectSerializer
+json=com.shawen.serialize.JsonSerializer
+kryo=com.shawen.serialize.KryoSerializer
+protostuff=com.shawen.serialize.ProtostuffSerializer
+hessian=com.shawen.serialize.HessianSerializer
