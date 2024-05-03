@@ -4,8 +4,10 @@ import com.shawen.common.RPCRequest;
 import com.shawen.common.RPCResponse;
 import com.shawen.common.RpcConstants;
 import com.shawen.common.RpcMessage;
+import com.shawen.common.enums.CompressTypeEnum;
 import com.shawen.common.extension.ExtensionLoader;
 import com.shawen.common.enums.SerializationTypeEnum;
+import com.shawen.compress.Compress;
 import com.shawen.serialize.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -109,6 +111,11 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         if (bodyLength > 0) {
             byte[] bs = new byte[bodyLength];
             in.readBytes(bs);
+            String compressName = CompressTypeEnum.getName(compressType);
+            Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
+                    .getExtension(compressName);
+            bs = compress.decompress(bs);
+
             String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
             log.info("codec name: [{}] ", codecName);
             // 根据 codecType 获得序列化方式

@@ -4,6 +4,7 @@ import com.shawen.common.RpcMessage;
 import com.shawen.common.enums.CompressTypeEnum;
 import com.shawen.common.enums.SerializationTypeEnum;
 import com.shawen.common.extension.ExtensionLoader;
+import com.shawen.compress.Compress;
 import com.shawen.serialize.Serializer;
 import com.shawen.common.RpcConstants;
 import io.netty.buffer.ByteBuf;
@@ -79,6 +80,11 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
                 Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)
                         .getExtension(codecName);
                 bodyBytes = serializer.serialize(rpcMessage.getData()); // 序列化数据
+
+                String compressName = CompressTypeEnum.getName(rpcMessage.getCompress());
+                Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
+                        .getExtension(compressName);
+                bodyBytes = compress.compress(bodyBytes);
                 fullLength += bodyBytes.length;
             }
 
